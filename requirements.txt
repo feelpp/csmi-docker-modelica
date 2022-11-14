@@ -1,0 +1,4 @@
+flask
+fmpy
+plotly
+dash

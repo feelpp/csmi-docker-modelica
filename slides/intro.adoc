@@ -1,0 +1,205 @@
+= Introduction to docker 
+:customcss: css/slides.css
+:revealjs_customtheme: css/sky.css
+:revealjs_width: 1408
+:revealjs_height: 792
+
+
+== Docker
+
+image:docker-img/docker.png[title="Docker", link="https://www.docker.com/"]
+
+Presentation taken from Docker Inc. introduction
+
+== Challenge
+
+image:docker-img/the-challenge.png[title="The Challenge", link="https://www.docker.com/"]
+
+== Matrix From Hell
+
+image:docker-img/the-matrix-from-hell.png[title="The Matrix Fron Hell", link="https://www.docker.com/"]
+
+== Cargo Transport
+
+=== Pre 1960: 
+image:docker-img/cargo-transport-pre-1960.png[title="Cargo Transport", link="https://www.docker.com/"]
+
+=== Also a Matrix from Hell
+
+image:docker-img/also-a-matrix-from-hell.png[title="Also a Matrix from Hell", link="https://www.docker.com/"]
+
+=== Solution: Intermodal Shipping Container
+
+image:docker-img/intermodal-shipping-container.png[title="Solution", link="https://www.docker.com/"]
+
+== Docker
+=== Docker is a Container System for Code
+
+image:docker-img/shipping-container-for-code.png[title="Shipping Container for Code", link="https://www.docker.com/"]
+
+=== Docker Eliminates the Matrix from Hell
+
+image:docker-img/eliminates-matrix-from-hell.png[title="Eliminates the Matrix from Hell", link="https://www.docker.com/"]
+
+=== Why should developers care?
+
+- A clean, safe, hygienic, portable runtime environment for your app.
+- No worries about missing dependencies, packages and other pain points during subsequent deployments.
+- Run each app in its own isolated container, so you can run various versions of libraries and other dependencies for each app without worrying.
+- Automate testing, integration, packaging...anything you can script.
+- Reduce/eliminate concerns about compatibility on different platforms, either your own or your customers.
+- Cheap, zero-penalty containers to deploy services. A VM without the overhead of a VM. Instant replay and reset of image snapshots.
+
+=== Why should sysadmins care?
+
+Configure once... run anything
+
+- Make the entire lifecycle more efficient, consistent, and repeatable
+- Increase the quality of code produced by developers.
+- Eliminate inconsistencies between development, test, production, and customer environments.
+- Support segregation of duties.
+- Significantly improves the speed and reliability of continuous deployment and continuous integration systems.
+- Because the containers are so lightweight, address significant performance, costs, deployment, and portability issues normally associated with VMs.
+
+=== Why should DevOps care?
+
+[.small]
+--
+- No more "it works on my machine" issues.
+- No more "it works on my machine, but not on the server" issues.
+- No more "it works on my machine, but not on the server, and I don't know why" issues.
+- No more "it works on my machine, but not on the server, and I don't know why, and I don't have time to figure it out" issues.
+- No more "it works on my machine, but not on the server, and I don't know why, and I don't have time to figure it out, and I don't have time to fix it" issues.
+- No more "it works on my machine, but not on the server, and I don't know why, and I don't have time to figure it out, and I don't have time to fix it, and I don't have time to roll back" issues.
+- No more "it works on my machine, but not on the server, and I don't know why, and I don't have time to figure it out, and I don't have time to fix it, and I don't have time to roll back, and I don't have time to restore from backup" issues.
+--
+
+== Docker Architecture
+
+=== Separation of Concerns
+
+image:docker-img/separation-of-concerns.png[title="Separation of Concerns", link="https://www.docker.com/"]
+
+
+[.columns]
+== More Technical Details
+
+[.column.x-small]
+.Why
+--
+- Run everywhere
+** Regardless of kernel version
+** Regardless of host distro
+** Physical or virtual, cloud or not
+** Container and host architecture must match...
+
+- Run anything
+** If it can run on the host, it can run in the container
+** If it can on a Linux kernel, it can run in the container
+--
+
+[.column.x-small]
+.what
+--
+- High level: a lightweight VM
+** Own process space
+** Own network interface
+** Can run stuff as root
+** Can have its own /sbin/init (different from host)
+** "machine container"
+
+- Low level: chroot on steroids
+** Can also _not_ have its own /sbin/init
+** Container = isolated processes
+** Share kernel with host
+** No device emulation</li>
+** "application container"
+--
+
+=== Containers vs VMs
+
+image:docker-img/containers-vs-vms.png[title="Containers vs VMs", link="https://www.docker.com/"]
+
+=== Why are Docker Containers Lightweight?
+
+image:docker-img/why-are-containers-lightweight.png[title="Why are Docker Containers Lightweight?", link="https://www.docker.com/"]
+
+=== What are the Basics of a Docker System?
+
+image:docker-img/basics-of-docker-system.png[title="Basics of Docker System", link="https://www.docker.com/"]
+
+=== Changes and updates
+
+image:docker-img/changes-and-updates.png[title="Changes and updates", link="https://www.docker.com/"]
+
+== Demo
+
+=== Docker Installation
+
+See https://docs.docker.com/engine/install/
+
+=== Docker Hello World
+
+
+ $ docker run hello-world
+
+=== Docker run Ubuntu
+
+ $ docker run -it ubuntu bash
+
+NOTE: `-it` is for interactive mode
+
+----
+> docker run -it ubuntu bash
+root@38d443191a31:/# 
+----
+
+=== Docker run Fedora
+
+ $ docker run -it fedora bash
+
+----
+> docker run -it fedora bash
+[root@ea2c31dc8dcd /]# cat /etc/redhat-release 
+Fedora release 36 (Thirty Six)
+[root@ea2c31dc8dcd /]# 
+----
+
+=== Anatomy of the docker command line
+
+- action: `run`, `pull`, `push`, `ps`
+- options: `-it`, `-d`, `-p`, `-v`, `--rm`...
+- container: `ubuntu`, `fedora` ...
+- command: `bash`, `ls`, `ps` ...
+
+=== Docker run Ubuntu with a volume
+
+ $ docker run -it -v /tmp:/tmp ubuntu bash
+
+----
+root@ebdbc00b0554:/# df
+Filesystem                          1K-blocks       Used   Available Use% Mounted on
+overlay                           15503770996 1975873444 12746478444  14% /
+tmpfs                                   65536          0       65536   0% /dev
+tmpfs                               528235424          0   528235424   0% /sys/fs/cgroup
+shm                                     65536          0       65536   0% /dev/shm
+/dev/mapper/ubuntu--vg-ubuntu--lv   205375464  161826364    33046956  84% /tmp
+/dev/mapper/nvme-lvol0            15503770996 1975873444 12746478444  14% /etc/hosts
+tmpfs                               528235424          0   528235424   0% /proc/acpi
+tmpfs                               528235424          0   528235424   0% /proc/scsi
+tmpfs                               528235424          0   528235424   0% /sys/firmware
+----
+
+=== Hey I have lots of Docker contaienrs running
+
+ $ docker ps -a
+
+NOTE: Use `docker stop` to stop a container using the ID or name
+
+ $ docker stop <container-id>
+ $ docker stop <container-name>
+
+NOTE: Use `docker --rm` to stop and remove a container after it exits
+
+ $ docker run --rm -it ubuntu bash
+

@@ -1,0 +1,15 @@
+{
+  "description": "Slides Builder",
+  "scripts": {
+    "docker": "npx asciidoctor-revealjs intro.adoc",
+    "serve": "node-srv -p 8010 .",
+    "fmu": "npx asciidoctor-revealjs intro-fmi.adoc",
+    "sfmu": "node-srv -p 8010 intro-fmi.html"
+
+  },
+  "devDependencies": {
+    "@asciidoctor/core": "^2.0.10",
+    "@asciidoctor/reveal.js": "^4.1",
+    "node-srv": "^3.0.3"
+  }
+}

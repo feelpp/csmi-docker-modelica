@@ -1,0 +1,227 @@
+= Introduction to Functional Mockup Interface
+:customcss: css/slides.css
+:revealjs_customtheme: css/sky.css
+:revealjs_width: 1408
+:revealjs_height: 792
+
+
+
+== Motivations
+
+=== Process
+
+image:fmi-img/fmi-pipeline.png[height=650,title="FMI Pipeline", link="https://www.docker.com/"]
+
+=== Challenges
+
+image::fmi-img/fmi-challenges.png[height=300,title="FMI Challenges", link="https://www.fmi-standard.org/"]
+
+[.small.left]
+--
+Challenges for Functional Mock-up:
+
+- Different tools and languages are involved
+- No standards for model interface and co-simulation available
+- Protection of model IP and know-how of supplier
+--
+
+== FMI Main Design Idea
+
+[.columns]
+=== FMI Main design idea
+
+[.column.x-small]
+--
+- FMI for Model Exchange
+
+image:fmi-img/fmi-me.png[title="FMI for Model Exchange", link="https://fmi-standard.org/"]
+--
+
+[.column.x-small]
+--
+- FMI for Co-Simulation
+
+image:fmi-img/fmi-cs.png[title="FMI for Co-Simulation", link="https://fmi-standard.org/"]
+--
+
+[.columns]
+=== FMI Main design idea
+
+
+[.column.small]
+--
+- A component which implements the interface is called a Functional Mockup Unit (FMU)
+
+* Separation of:
+** Description of interface data: XML file
+** Functionality: Application Programming Interface (API) in C
+
+* An FMU is a zipped file (*.fmu) containing:
+** modelDescription.xml
+** Implementation in source and/or binary form
+** Additional data and functionality
+--
+
+[.column.x-small]
+--
+image:fmi-img/fmi-zip.png[title="FMI Zip", link="https://fmi-standard.org/"]
+--
+
+=== FMI Model Description
+
+.Model description stored in an XML file
+image::fmi-img/fmi-model-desc.png[height=550,title="FMI Model Description", link="https://fmi-standard.org/"]
+
+
+== C interface
+
+[.small]
+--
+- Instantiation:
+
+    fmiComponent fmilnstantiate (fmiString instanceName, ...)
+
+- Returns an instance of the FMU. Returned `fmicomponent` is an argument of the other interface functions.
+- Functions for initialization, termination, destruction
+- Support of real, integer, boolean, and string inputs, outputs, parameters
+- `Set` and `Get`` functions for each type:
+]source,c++]
+----
+    fmiStatus fmiSetReal (fmiComponent c,
+                          const fmivalueReference vr [] , size t nvr,
+                          const fmireal value [])
+    fmistatus fmisetinteger(fmicomponent $c$,
+                            const fmivalueReference vr[], size t nvr,
+                            const fmilnteger value[])
+----
+- Identification by valueReference, defined in the XML description file for each variable
+--
+
+== FMI for Model Exchange
+
+=== Features
+
+[.small]
+--
+- Functionality of state of the art modeling methods can be expressed
+- Support of continuous-time and discrete-time systems
+- Model is described by differential, algebraic, discrete equations
+- Interface for solution of hybrid Ordinary Differential Equations (ODE)
+- Handling of time, state and step events, event iteration
+- Discarding of invalid inputs, state variables
+- No explicit function call for computation of model algorithm
+- FMU decides which part is to be computed, when a `fmi2get` Xxx function is called
+- Allows for efficient caching algorithms
+--
+
+=== Data Exchange
+
+image::fmi-img/fmi-for-me.png[height=550,title="FMI for Model Exchange", link="https://fmi-standard.org/"]
+
+
+== FMI for Co-Simulation
+
+[.columns]
+=== Features
+
+[.column.x-small]
+--
+Motivation
+
+- Simulation of heterogeneous systems
+- Partitioning and parallelization of large systems
+- Multirate integration
+- Hardware-in-the-loop simulation
+
+Definition:
+
+- Coupling of several simulation tools
+- Each tool treats one part of a modular coupled problem
+- Data exchange is restricted to discrete communication points
+- Subsystems are solved independently between communication points
+--
+
+[.column.x-small]
+--
+image::fmi-img/fmi-for-cs.png[height=550,title="FMI for Co-Simulation", link="https://fmi-standard.org/"]
+--
+
+=== FMI for Co-Simulation
+
+* FMI enables sophisticated Co-Simulation Master Algorithms:
+** Optional variable communication step size
+** Optional higher-order approximation of inputs and outputs
+** Optional repetition of communication steps
+- Capabilities of the slave are contained in the XML-file
+- Master can decide which coupling algorithm is applicable
+
+**Tools which do not support all features are not excluded**
+
+- Asynchronous execution (allows for parallel execution)
+
+=== Data Exchange
+
+image::fmi-img/fmi-cs-dataexchange.png[height=300,title="FMI Data Exchanged in Co-Simulation", link="https://fmi-standard.org/"]
+
+[NOTE]
+.Additional features
+--
+- Status information
+- Derivatives of inputs, outputs w.r.t. time for support of higher order approximation between communication steps
+--
+
+
+== ME and CS
+
+[.columns]
+=== Comparison
+
+[.column.x-small]
+--
+Model Exchange:
+(One model evaluation)
+
+image:fmi-img/fmi-me-time.png[title="One Model Evaluation", link="https://fmi-standard.org/"]
+
+[source,cpp]
+----
+/* Set inputs*/ fmiSetReal(m, id_u, u, nu); fmiSetTime(m, tC);
+fmiSetContinuousStates(m, x, nx);
+/* Get outputs*/ fmiGetReal(m, id_y, y, ny);
+fmiGetDerivatives(m, derx, nx); 
+fmiGetEventIndicators(m, z, nz);
+----
+--
+
+[.column.x-small]
+--
+Co-Simulation
+(One communication step)
+
+image:fmi-img/fmi-cs-time.png[title="One communication step", link="https://fmi-standard.org/"]
+
+[source,c]
+----
+/* Set inputs*/
+fmisetReal(s, id,u, u, nu);
+/* Do computation*
+fmidostep(s, tC, hC, fmiTrue);
+/* Get outputs*/
+fmigetReal (s, id, y,y, ny);
+----
+--
+
+== Use Cases
+
+[.columns]
+=== Automotive Use Cases
+
+image::fmi-img/fmi-use-case-automotive.png[height=550,title="FMI Automotive Use Cases", link="https://fmi-standard.org/"]
+
+
+
+
+
+
+
+

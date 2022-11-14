@@ -1,0 +1,58 @@
+= Questions Modelica
+
+== Comment le langage Modelica peut-il décrire des systèmes d’équations comme ceux de Daume et al. 2020 (exemples) ?
+
+oui. Il suffit de définir les équations de Daume et al. 2020 comme des équations de modèle. 
+
+
+
+== Quelle forme pourrait prendre la bibliothèque d'équations pour que les équations puissent être chargées avec Modelica pour construire un modèle?
+
+Cela peut prendre une forme graphique ou texte.
+
+=== Texte
+
+Avec Modelica il est possible de définir des équations de modèle.
+
+[source, modelica]
+----
+include::../bioprocess.mo[]
+----
+
+
+=== Graphique
+
+Grace aux objects définis ci-dessus, nous pouvons assembler un système de bioreacteur de manière graphique.
+- Object: bioreactor
+- Object: feed tank
+- Object: feed pump
+- Object: feed profile
+- Object: one or several sensors to check the state of the system
+- Object: one or several actuators to control the system
+- Object: a controller eg PID to control the system
+
+
+== Est-il possible de générer de manière dynamique un modèle à partir de cette bibliothèque d'équations dans OpenModelica ou Dymola ?
+
+Oui. Il est possible de générer un modèle à partir de cette bibliothèque d'équations dans OpenModelica ou Dymola. 
+Uiliser des blocks de modèles et ajouter de nouvelles cinétiques de réaction dans le modèle.
+
+Le caractère dynamique de la sélection du modèle peut etre problématique pour la génération du FMU. 
+Cependant une solution serait de générer le FMU du modèle avec un nombre de réactions maximum identifié par le processus de sélection dynamique.
+
+== Si l'on sauvegarde le modèle ainsi généré sous forme de FMU dans un catalogue, est-il possible de recharger ce modèle avec Modelica et de faire des opérations mathématiques sur les équations qui le composent? (en utilisant des métadonnées par exemple)
+
+voir ci-dessus: Oui. Le modèle étant trouvé, il est aisé de le manipuler par la suite avec Modelica.
+
+
+== Sous quelle forme des scripts Python peuvent-ils être intégrés dans OpenModelica ou Dymola?
+
+OpenModelica propose une interface Python.
+
+- https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html[OMPython] l'interface de scripting Python pour OpenModelica
+- https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#enhancedompython[EnhancedOMPython] - Interface de script OMPython améliorée
+- https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/ompython.html#pysimulator[PySimulator] 
+
+
+Dymola propose également une interface Python qui permet de manipuler les modèles Modelica. 
+voir eg: https://github.com/feelpp/mo2fmu/blob/main/mo2fmu.py[Mo2Fmu] - un convertisseur Modelica(Dymola) vers FMU

@@ -1,0 +1,2 @@
+loadFile("Lorenz.mo");
+translateModelFMU(Lorenz,version="2.0",fmuType="cs",fileNamePrefix="lorenz");

@@ -10,3 +10,9 @@ feelpp_mor_toolbox_heat_offline/np_1/logs/feelpp_mor_toolbox_heat_offline.INFO
 feelpp_mor_toolbox_heat_offline/np_1/logs/feelpp_mor_toolbox_heat_offline.WARNING
 node_modules/
 slides/.bundle/
+*.log
+*_FMU.libs
+*_FMU.log
+*_FMU.makefile
+*_info.json
+*.fmu
